@@ -20,17 +20,6 @@ class HDigitsModel:
 
         self.z2 = self.W2 @ self.h1 + self.b2
         self.out = self.softmax(self.z2)
-    
-    def cross_entropy_loss(self, y_true, y_pred):
-        """
-        calculates the loss for the predicted values
-
-        :param y_true: one-hot labels (10, batch)
-        :param y_pred: predicted probabilities from softmax (10, batch)
-        """
-        # epsilon to prevent log(0)
-        eps = 1e-12
-        return -np.sum(y_true * np.log(y_pred + eps))/y_true.shape[1]
 
     def backward(self, x, y_true, lr):
         """
@@ -66,6 +55,18 @@ class HDigitsModel:
         """
         probs = self.forward(x)
         return np.argmax(probs, axis=0)
+
+    @staticmethod
+    def cross_entropy_loss(y_true, y_pred):
+        """
+        calculates the loss for the predicted values
+
+        :param y_true: one-hot labels (10, batch)
+        :param y_pred: predicted probabilities from softmax (10, batch)
+        """
+        # epsilon to prevent log(0)
+        eps = 1e-12
+        return -np.sum(y_true * np.log(y_pred + eps))/y_true.shape[1]
 
     @staticmethod
     def xavier_init(size_in, size_out):
