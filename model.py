@@ -9,6 +9,10 @@ class HDigitsModel:
         self.W2 = self.xavier_init(hidden_dim, output_dim)
         self.b2 = np.zeros((output_dim, 1))
 
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+
     def forward(self, x):
         """
         forward pass
@@ -53,8 +57,37 @@ class HDigitsModel:
 
         :param x: input image data
         """
-        probs = self.forward(x)
-        return np.argmax(probs, axis=0)
+        self.forward(x)
+        return np.argmax(self.out, axis=0)
+    
+    def save(self, path):
+        np.savez(
+            path,
+            W1=self.W1,
+            W2=self.W2,
+            b1=self.b1,
+            b2=self.b2,
+
+            input_dim=self.input_dim,
+            hidden_dim=self.hidden_dim,
+            output_dim=self.output_dim
+        )
+    
+    @classmethod
+    def load(cls, path):
+        data = np.load(path)
+        model = cls(
+            input_dim=int(data["input_dim"]),
+            hidden_dim=int(data["hidden_dim"]),
+            output_dim=int(data["output_dim"])
+        )
+        
+        model.W1 = data["W1"]
+        model.b1 = data["b1"]
+        model.W2 = data["W2"]
+        model.b2 = data["b2"]
+
+        return model
 
     @staticmethod
     def cross_entropy_loss(y_true, y_pred):

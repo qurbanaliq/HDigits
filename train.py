@@ -5,7 +5,8 @@ import numpy as np
 import model
 import load_data
 
-DATASET_PATH = os.path.join(os.path.dirname(__file__), "MNIST")
+BASE_PATH = os.path.dirname(__file__)
+DATASET_PATH = os.path.join(BASE_PATH, "MNIST")
 
 def one_hot(labels, num_classes=10):
     """
@@ -77,10 +78,15 @@ def trainModel():
             digitsModel.backward(x, y, lr)
         
         print(
-            f"Epoch {epoch + 1}:"
-            f"Loss: {total_loss/N}"
-            f"Accuracy: {correct/N*100:.2f}%"
+            f"Epoch {epoch + 1}: "
+            f"Loss={total_loss/N} "
+            f"Accuracy={correct/N*100:.2f}%"
         )
+    
+    # save the model
+    path = os.path.join(BASE_PATH, "mnist_mlp.npz")
+    digitsModel.save(path)
+    print(f"model saved to '{path}'")
     
     return digitsModel
 
@@ -96,8 +102,7 @@ if __name__ == "__main__":
     X_test = X_test_flat.reshape(-1, 784).T
 
     # make the predictions
-    trainedModel.forward(X_test)
-    test_preds = np.argmax(trainedModel.out, axis=0)
+    test_preds = trainedModel.predict(X_test)
     
     # get the accuracy
     test_accuracy = accuracy(test_preds, y_test)
