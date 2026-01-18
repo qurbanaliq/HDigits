@@ -1,13 +1,13 @@
 import numpy as np
 
 class HDigitsModel:
-    def __int__(self, input_dim=784, hidden_dim=128, output_dim=10):
+    def __init__(self, input_dim=784, hidden_dim=128, output_dim=10):
         
         self.W1 = self.xavier_init(input_dim, hidden_dim)
-        self.b1 = np.zeros(hidden_dim, 1)
+        self.b1 = np.zeros((hidden_dim, 1))
 
         self.W2 = self.xavier_init(hidden_dim, output_dim)
-        self.b2 = np.zeros(output_dim, 1)
+        self.b2 = np.zeros((output_dim, 1))
 
     def forward(self, x):
         """
