@@ -92,7 +92,8 @@ def trainModel():
 
 if __name__ == "__main__":
     # train the model
-    trainedModel = trainModel()
+    #trainedModel = trainModel()
+    trainedModel = model.HDigitsModel.load(os.path.join(BASE_PATH, "mnist_mlp.npz"))
 
     # test the model
     X_test_flat = load_data.get_images(os.path.join(DATASET_PATH, "t10k-images-idx3-ubyte.gz"))
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     # show prediction on the UI
     import matplotlib.pyplot as plt
     
-    index = 10
+    index = 2
     img = X_test_flat[index].reshape(28, 28)
     label = y_test[index]
 
