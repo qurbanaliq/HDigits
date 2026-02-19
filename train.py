@@ -4,6 +4,7 @@ import numpy as np
 
 import model
 import load_data
+import predict
 
 BASE_PATH = os.path.dirname(__file__)
 DATASET_PATH = os.path.join(BASE_PATH, "MNIST")
@@ -18,15 +19,6 @@ def one_hot(labels, num_classes=10):
     out = np.zeros((labels.size, num_classes))
     out[np.arange(labels.size), labels] = 1
     return out.T # (10, batch)
-
-def accuracy(preds, labels):
-    """
-    returns the accuracy of the predictions
-    
-    :param preds: predictions made by the model
-    :param labels: array of true labels
-    """
-    return np.mean(preds == labels) * 100
 
 def trainModel():
     """
@@ -92,32 +84,5 @@ def trainModel():
 
 if __name__ == "__main__":
     # train the model
-    #trainedModel = trainModel()
-    trainedModel = model.HDigitsModel.load(os.path.join(BASE_PATH, "mnist_mlp.npz"))
-
-    # test the model
-    X_test_flat = load_data.get_images(os.path.join(DATASET_PATH, "t10k-images-idx3-ubyte.gz"))
-    y_test = load_data.get_labels(os.path.join(DATASET_PATH, "t10k-labels-idx1-ubyte.gz"))
-
-    # convert images into [784, batch]
-    X_test = X_test_flat.reshape(-1, 784).T
-
-    # make the predictions
-    test_preds = trainedModel.predict(X_test)
-    
-    # get the accuracy
-    test_accuracy = accuracy(test_preds, y_test)
-
-    print(f"Test Accuracy: {test_accuracy:.2f}%")
-
-    # show prediction on the UI
-    import matplotlib.pyplot as plt
-    
-    index = 2
-    img = X_test_flat[index].reshape(28, 28)
-    label = y_test[index]
-
-    plt.imshow(img, cmap="gray")
-    plt.title(f"True Label: {label}, predicted: {test_preds[index]}")
-    plt.axis("off")
-    plt.show()
+    _ = trainModel()
+    predict.predict()
